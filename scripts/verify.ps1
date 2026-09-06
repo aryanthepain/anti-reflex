@@ -77,34 +77,51 @@ if ($isNode) {
     }
 
     if (-not $failed) {
-        Write-Host "Running tests (npm test)..." -ForegroundColor Gray
-        if ($TargetTest) {
-            npm test -- $TargetTest
-        } else {
-            npm test
+        if ($Quick) {
+            Write-Host "Running quick verification path (-Quick)..." -ForegroundColor Gray
+            if (Test-Path "src/main.js") {
+                node --check src/main.js
+                if ($LASTEXITCODE -ne 0) {
+                    Write-Host "❌ src/main.js syntax check failed!" -ForegroundColor Red
+                    $failed = $true
+                }
+            }
         }
-        if ($LASTEXITCODE -ne 0) {
-            Write-Host "❌ npm test failed!" -ForegroundColor Red
-            $failed = $true
-        } else {
-            Write-Host "✅ npm test passed." -ForegroundColor Green
+
+        if (-not $failed) {
+            Write-Host "Running tests (npm test)..." -ForegroundColor Gray
+            if ($TargetTest) {
+                npm test -- $TargetTest
+            } else {
+                npm test
+            }
+            if ($LASTEXITCODE -ne 0) {
+                Write-Host "❌ npm test failed!" -ForegroundColor Red
+                $failed = $true
+            } else {
+                Write-Host "✅ npm test passed." -ForegroundColor Green
+            }
         }
     }
 }
 
-# 3. Detect JavaScript / Web Project (e.g. docs/app.js syntax check)
-if (Test-Path "docs/app.js") {
+# 3. Detect JavaScript / Web Project syntax check
+$entrypoint = $null
+if (Test-Path "src/main.js") { $entrypoint = "src/main.js" }
+elseif (Test-Path "docs/app.js") { $entrypoint = "docs/app.js" }
+
+if ($entrypoint -and (-not $Quick)) {
     Write-Host ""
     Write-Host "--- [Web and JavaScript Gate] ---" -ForegroundColor Yellow
     $hasNode = Get-Command node -ErrorAction SilentlyContinue
     if ($hasNode) {
-        Write-Host "Checking docs/app.js syntax..." -ForegroundColor Gray
-        node --check docs/app.js
+        Write-Host "Checking $entrypoint syntax..." -ForegroundColor Gray
+        node --check $entrypoint
         if ($LASTEXITCODE -ne 0) {
-            Write-Host "❌ docs/app.js syntax check failed!" -ForegroundColor Red
+            Write-Host "❌ $entrypoint syntax check failed!" -ForegroundColor Red
             $failed = $true
         } else {
-            Write-Host "✅ docs/app.js syntax check passed." -ForegroundColor Green
+            Write-Host "✅ $entrypoint syntax check passed." -ForegroundColor Green
         }
     }
 }

@@ -9,10 +9,10 @@
 ---
 
 ## Acceptance Criteria
-- [ ] 1. Targeted test passes (`pytest -k test_auth` / `npm test -- auth`)
-- [ ] 2. Static analysis clean (`mypy .` / `npx tsc --noEmit`)
+- [ ] 1. Targeted test passes (`npm test -- <test-file-or-pattern>`, e.g. `npm test -- commentator`)
+- [ ] 2. Universal deterministic gate passes (`pwsh -File ./scripts/verify.ps1`)
 - [ ] 3. No unnecessary dependencies or speculative abstractions (Ponytail Ladder)
-- [ ] 4. Security review passed (Strix / SAST)
+- [ ] 4. Security review passed (clean git diff, zero hardcoded credentials)
 
 ---
 

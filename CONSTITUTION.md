@@ -5,9 +5,9 @@
 ---
 
 ## 1. Technical Stack Invariants
-- **Primary Language & Version**: [e.g. Python 3.12+ / TypeScript 5.5+ / Go 1.23+]
-- **Strict Typing**: All new code must be fully typed (100% strict `mypy` / `tsc`).
-- **Testing Framework**: [e.g. `pytest` + `pytest-asyncio` / `vitest` + `@testing-library/react`].
+- **Primary Language & Runtime**: JavaScript (Vanilla ES Modules, modern browser standard APIs).
+- **Architecture**: Zero-runtime-dependency static web application; zero build step required.
+- **Testing Framework**: Vitest (`vitest run`).
 
 ---
 
