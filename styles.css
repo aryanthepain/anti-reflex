@@ -1,0 +1,769 @@
+:root {
+  --bg: #14161c;
+  --fg: #e8eaf0;
+  --grey-dot: #8a8f9c;
+  --bright-dot: #ffd23f;
+  --correct: #36c46f;
+  --wrong: #e5484d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.game {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.title {
+  font-size: 1.25rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.banner {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 1rem;
+  border: 2px solid #2a2e3a;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.hud {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.hud__item strong {
+  display: inline-block;
+  margin-left: 0.4em;
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
+}
+
+.gameover {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.gameover__title {
+  font-size: 1.6rem;
+  letter-spacing: 0.08em;
+  color: #ff5d5d;
+}
+
+.gameover__score strong,
+.gameover__rounds strong {
+  font-size: 1.4rem;
+}
+
+.gameover__best strong {
+  font-size: 1.4rem;
+  color: #ffd166;
+}
+
+.share {
+  margin: 1.25rem auto 0;
+  max-width: 28rem;
+  text-align: left;
+}
+
+.share__title {
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.75;
+  margin-bottom: 0.5rem;
+}
+
+.share__text {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: inherit;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 0.75rem 0.9rem;
+  margin: 0 0 0.6rem;
+  user-select: text;
+}
+
+.share__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.share__status {
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+.arena {
+  display: flex;
+  gap: 1rem;
+  min-height: 220px;
+}
+
+.zone {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  border: 1px dashed #2a2e3a;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.dot {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dot--grey {
+  background: var(--grey-dot);
+}
+
+.dot--bright {
+  background: var(--bright-dot);
+}
+
+/* Shape pairing for the grey-dot rule: the calm cue is a plain disc, the bright
+   decoys are a starburst — distinguishable by shape (and label) without color. */
+.dot--disc {
+  border-radius: 50%;
+}
+
+.dot--burst {
+  border-radius: 8px;
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
+}
+
+.dot__label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #14161c;
+}
+
+.cue {
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cue--blue {
+  background: #2f6fed;
+}
+
+.cue--red {
+  background: #e0334b;
+}
+
+.cue--circle {
+  border-radius: 50%;
+}
+
+.cue--octagon {
+  border-radius: 12px;
+  clip-path: polygon(
+    30% 0%,
+    70% 0%,
+    100% 30%,
+    100% 70%,
+    70% 100%,
+    30% 100%,
+    0% 70%,
+    0% 30%
+  );
+}
+
+.zone--center {
+  flex: 0 0 auto;
+}
+
+/* Honeypot bait — a tactile, tempting button. Placeholder physics; full juice
+   (press feedback, wobble) lands in the juice slice. */
+.bait--honeypot {
+  width: 80px;
+  height: 80px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #1a0f00;
+  background: radial-gradient(circle at 30% 25%, #ffd76a, #f5a623 60%, #d77f00);
+  box-shadow: 0 6px 0 #9a5a00, 0 8px 16px rgba(0, 0, 0, 0.45);
+  transition: transform 80ms ease, box-shadow 80ms ease;
+}
+
+.bait--honeypot:hover {
+  transform: translateY(-2px);
+}
+
+.bait--honeypot:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 #9a5a00, 0 3px 6px rgba(0, 0, 0, 0.45);
+}
+
+.bait--honeypot .dot__label {
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+/* Peripheral bait — flashy, attention-grabbing motion in the periphery that is
+   never the answer. The motion is honored via [data-motion]; a later
+   reduced-motion slice can suppress it (a static fallback is acceptable here). */
+.bait--peripheral-bait {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #1a0033;
+  font-weight: 800;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  background: radial-gradient(circle at 30% 25%, #ff9bf0, #ff37c8 60%, #c800a8);
+  box-shadow: 0 0 12px rgba(255, 55, 200, 0.7);
+}
+
+.bait--peripheral-bait[data-motion='flash'] {
+  animation: peripheral-bait-flash 0.5s ease-in-out infinite;
+}
+
+@keyframes peripheral-bait-flash {
+  0%,
+  100% {
+    transform: translateX(-6px) scale(0.95);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateX(6px) scale(1.1);
+    opacity: 1;
+  }
+}
+
+/* Reduced-motion: the user toggle (body.motion-reduced) and the no-JS OS default
+   both swap the flashy translate/scale strobe for a calm border-pulse that still
+   draws the eye without shake/flash. body.motion-full re-enables the flash even
+   when the OS prefers reduced motion, so the toggle stays authoritative. */
+@keyframes border-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 1px rgba(255, 209, 102, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(255, 209, 102, 0.85);
+  }
+}
+
+body.motion-reduced .bait--peripheral-bait[data-motion='flash'] {
+  transform: none;
+  opacity: 1;
+  animation: border-pulse 1.4s ease-in-out infinite;
+}
+
+body.motion-full .bait--peripheral-bait[data-motion='flash'] {
+  animation: peripheral-bait-flash 0.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bait--peripheral-bait[data-motion='flash'] {
+    transform: none;
+    opacity: 1;
+    animation: border-pulse 1.4s ease-in-out infinite;
+  }
+}
+
+.stroop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.stroop__word {
+  font-size: 2.4rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.stroop__label {
+  font-size: 1rem;
+  font-weight: 700;
+  opacity: 0.85;
+}
+
+.stroop--green .stroop__word,
+.stroop--green .stroop__label {
+  color: #29c267;
+}
+
+.stroop--orange .stroop__word,
+.stroop--orange .stroop__label {
+  color: #f08a24;
+}
+
+.stroop--grey .stroop__word,
+.stroop--grey .stroop__label {
+  color: #9aa0ad;
+}
+
+/* Banner ink: color words in the rule banner are painted in their own ink so the
+   Stroop legend reads at a glance. Bold so the inked word stays legible. */
+.banner__ink {
+  font-weight: 800;
+}
+
+.banner__ink--green {
+  color: #29c267;
+}
+
+.banner__ink--orange {
+  color: #f08a24;
+}
+
+.banner__ink--grey {
+  color: #9aa0ad;
+}
+
+.banner__ink--blue {
+  color: #2f6fed;
+}
+
+.banner__ink--red {
+  color: #e0334b;
+}
+
+.result {
+  min-height: 2rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 1.5rem;
+}
+
+.result--correct {
+  color: var(--correct);
+}
+
+.result--wrong {
+  color: var(--wrong);
+}
+
+/* The fixed overlays set display: grid, which would otherwise win over the UA
+   [hidden] rule — re-assert hidden so the renderer can toggle them. */
+.rule-change[hidden],
+.roast[hidden] {
+  display: none;
+}
+
+.rule-change {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.72);
+  z-index: 10;
+}
+
+.rule-change__banner {
+  margin: 1rem 0 0;
+  max-width: 32ch;
+  font-size: clamp(1rem, 3.5vw, 1.4rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--fg);
+}
+
+.rule-change__prompt {
+  margin: 1.5rem 0 0;
+  font-size: 0.95rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.75;
+  animation: rule-change-prompt-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes rule-change-prompt-pulse {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 0.9; }
+}
+
+body.motion-reduced .rule-change__prompt {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rule-change__prompt { animation: none; }
+}
+
+.rule-change__flash {
+  font-size: clamp(2rem, 8vw, 4rem);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #ffd166;
+  animation: rule-change-flash 0.5s steps(2, end) infinite;
+}
+
+@keyframes rule-change-flash {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+/* Reduced-motion swaps the harsh RULE CHANGED strobe for a gentle opacity pulse
+   on a steady-bordered overlay; the telegraph still reads, without the flash. */
+body.motion-reduced .rule-change__flash,
+body.motion-full .rule-change__flash {
+  animation: rule-change-flash 0.5s steps(2, end) infinite;
+}
+
+body.motion-reduced .rule-change__flash {
+  animation: rule-change-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes rule-change-pulse {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rule-change__flash {
+    animation: rule-change-pulse 1.4s ease-in-out infinite;
+  }
+}
+
+.hint {
+  opacity: 0.6;
+}
+
+.menu__tagline {
+  font-size: 1.1rem;
+  opacity: 0.85;
+}
+
+.actions {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.key {
+  display: inline-block;
+  min-width: 2rem;
+  padding: 0.15rem 0.5rem;
+  margin-right: 0.5rem;
+  border: 1px solid #3a3f4d;
+  border-radius: 0.35rem;
+  background: #1c1f28;
+  font-weight: 700;
+}
+
+.btn {
+  font: inherit;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: var(--correct);
+  color: #08130c;
+  cursor: pointer;
+}
+
+.btn--ghost {
+  margin-top: 1.5rem;
+  background: transparent;
+  border: 1px solid #3a3f4d;
+  color: var(--fg);
+}
+
+.controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.btn--toggle {
+  padding: 0.4rem 1rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  background: transparent;
+  border: 1px solid #3a3f4d;
+  color: var(--fg);
+  border-radius: 999px;
+}
+
+.btn--toggle[aria-pressed='true'] {
+  background: var(--correct);
+  color: #08130c;
+  border-color: var(--correct);
+}
+
+.countdown {
+  height: 8px;
+  border-radius: 999px;
+  background: #2a2e3a;
+  margin-bottom: 1rem;
+  overflow: hidden;
+  --countdown: 100%;
+}
+
+.countdown::after {
+  content: '';
+  display: block;
+  height: 100%;
+  width: var(--countdown);
+  background: var(--bright-dot);
+  transition: width 60ms linear;
+}
+
+.zone {
+  position: relative;
+}
+
+.zone__affordance {
+  position: absolute;
+  top: 0.5rem;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  opacity: 0.5;
+}
+
+/* ------------------------------------------------------------------ *
+ * Juice — wrong-action shake + red flash, correct-resist glow, the
+ * shrinking-window heartbeat, the strike roast screen, and tactile
+ * button physics. All motion is gated on the reduced-motion toggle:
+ * body.motion-full keeps the shake/flash; body.motion-reduced (and the
+ * no-JS OS default) swap it for a calm border-pulse, audio untouched.
+ * ------------------------------------------------------------------ */
+
+.arena {
+  position: relative;
+}
+
+/* Red flash overlay rides on top of the arena without shifting layout. */
+.arena.juice-wrong::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  pointer-events: none;
+  background: var(--wrong);
+  opacity: 0;
+  animation: red-flash 0.45s ease-out;
+  z-index: 5;
+}
+
+.arena.juice-wrong {
+  animation: screen-shake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+.arena.juice-correct {
+  animation: calm-glow 0.6s ease-out;
+}
+
+@keyframes screen-shake {
+  10%, 90% { transform: translateX(-2px); }
+  20%, 80% { transform: translateX(4px); }
+  30%, 50%, 70% { transform: translateX(-8px); }
+  40%, 60% { transform: translateX(8px); }
+}
+
+@keyframes red-flash {
+  0% { opacity: 0.55; }
+  100% { opacity: 0; }
+}
+
+@keyframes calm-glow {
+  0% { box-shadow: 0 0 0 0 rgba(54, 196, 111, 0.55); }
+  100% { box-shadow: 0 0 0 18px rgba(54, 196, 111, 0); }
+}
+
+/* Reduced-motion: no shake, no harsh flash — a single calm border-pulse that
+   still signals the strike. body.motion-full re-enables the full juice even when
+   the OS prefers reduced motion (the toggle is authoritative). */
+body.motion-reduced .arena.juice-wrong {
+  animation: border-pulse 0.5s ease-in-out;
+}
+
+body.motion-reduced .arena.juice-wrong::before {
+  animation: none;
+  opacity: 0;
+}
+
+body.motion-full .arena.juice-wrong {
+  animation: screen-shake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+body.motion-full .arena.juice-wrong::before {
+  animation: red-flash 0.45s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arena.juice-wrong {
+    animation: border-pulse 0.5s ease-in-out;
+  }
+  .arena.juice-wrong::before {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+/* Visual heartbeat: the countdown bar pulses faster/brighter as it drains. */
+.countdown--urgent {
+  animation: heartbeat-pulse 0.5s ease-in-out infinite;
+}
+
+@keyframes heartbeat-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(229, 72, 77, 0); }
+  50% { box-shadow: 0 0 0 3px rgba(229, 72, 77, 0.5); }
+}
+
+body.motion-reduced .countdown--urgent {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .countdown--urgent { animation: none; }
+}
+
+/* Strike roast screen — pauses the action with the commentator's verdict. */
+.roast {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 0.75rem;
+  padding: 2rem;
+  background: rgba(10, 6, 8, 0.86);
+  z-index: 12;
+}
+
+.roast__tag {
+  font-size: clamp(1.5rem, 6vw, 3rem);
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  color: var(--wrong);
+  animation: roast-stamp 0.3s ease-out;
+}
+
+.roast__line {
+  font-size: clamp(1.1rem, 4vw, 1.6rem);
+  font-weight: 700;
+  margin: 0;
+  max-width: 28ch;
+}
+
+.roast__stat {
+  font-size: 1rem;
+  opacity: 0.8;
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.roast__prompt {
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.85;
+  margin: 0.4rem 0 0;
+  min-height: 1.2em;
+  animation: rule-change-prompt-pulse 1.1s ease-in-out infinite;
+}
+
+body.motion-reduced .roast__prompt {
+  animation: none;
+}
+
+@keyframes roast-stamp {
+  0% { transform: scale(1.6); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+body.motion-reduced .roast__tag,
+body.motion-reduced .arena.juice-correct {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .roast__tag,
+  .arena.juice-correct {
+    animation: none;
+  }
+}
+
+/* Tactile press feedback for the action zones (buttons feel physical). */
+.zone {
+  transition: transform 80ms ease, box-shadow 80ms ease;
+}
+
+.zone:active {
+  transform: scale(0.98);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.08);
+}

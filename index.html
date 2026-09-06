@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Anti-Reflex</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="game">
+      <h1 class="title">Anti-Reflex</h1>
+
+      <div class="controls">
+        <button id="motion-toggle" class="btn btn--toggle" type="button" aria-pressed="false">
+          Reduced motion: OFF
+        </button>
+        <button id="mute-toggle" class="btn btn--toggle" type="button" aria-pressed="false">
+          Sound: ON
+        </button>
+      </div>
+
+      <section id="menu" class="menu" hidden>
+        <p class="menu__tagline">Fast reflexes lose. Read the cue, then act.</p>
+        <ul class="actions" aria-label="available actions">
+          <li><span class="key">←</span> LEFT</li>
+          <li><span class="key">→</span> RIGHT</li>
+          <li><span class="key">∅</span> RESIST — do nothing</li>
+        </ul>
+        <button id="start" class="btn" type="button">Start</button>
+      </section>
+
+      <section id="play" class="play" hidden>
+        <div id="hud" class="hud" aria-label="run status">
+          <span class="hud__item">SCORE <strong id="hud-score">0</strong></span>
+          <span class="hud__item">COMBO <strong id="hud-combo">×1</strong></span>
+          <span class="hud__item">STRIKES <strong id="hud-strikes">○○○</strong></span>
+        </div>
+        <div id="banner" class="banner" aria-live="polite"></div>
+        <div id="countdown" class="countdown" role="progressbar" aria-label="input window" aria-valuemin="0" aria-valuemax="100"></div>
+        <div id="arena" class="arena">
+          <div id="left-zone" class="zone" aria-label="left">
+            <span class="zone__affordance">← LEFT</span>
+          </div>
+          <div id="center-zone" class="zone zone--center" aria-label="center"></div>
+          <div id="right-zone" class="zone" aria-label="right">
+            <span class="zone__affordance">RIGHT →</span>
+          </div>
+        </div>
+        <div id="result" class="result" aria-live="assertive"></div>
+        <div id="rule-change" class="rule-change" role="status" aria-live="assertive" hidden>
+          <span id="rule-change-title" class="rule-change__flash">RULE CHANGED</span>
+          <p id="rule-change-banner" class="rule-change__banner"></p>
+          <p id="rule-change-prompt" class="rule-change__prompt"></p>
+        </div>
+        <div id="roast" class="roast" role="status" aria-live="assertive" hidden>
+          <span class="roast__tag">STRIKE</span>
+          <p id="roast-line" class="roast__line"></p>
+          <p id="roast-stat" class="roast__stat"></p>
+          <p id="roast-prompt" class="roast__prompt"></p>
+        </div>
+        <p class="hint">Arrow keys or tap a side. Wrong cue? <strong>Resist</strong> — do nothing.</p>
+        <button id="restart" class="btn btn--ghost" type="button">Restart</button>
+      </section>
+
+      <section id="gameover" class="gameover" hidden>
+        <h2 class="gameover__title">THREE STRIKES — RUN OVER</h2>
+        <p class="gameover__score">Composure <strong id="gameover-score">0</strong></p>
+        <p class="gameover__rounds">Rounds survived <strong id="gameover-rounds">0</strong></p>
+        <p class="gameover__best">Best composure <strong id="gameover-best">0</strong></p>
+        <div class="share">
+          <h3 class="share__title">Share your collapse</h3>
+          <pre id="share-text" class="share__text" tabindex="0" aria-label="shareable result card"></pre>
+          <div class="share__actions">
+            <button id="copy-share" class="btn btn--ghost" type="button">Copy result</button>
+            <span id="copy-status" class="share__status" role="status" aria-live="polite"></span>
+          </div>
+        </div>
+        <button id="play-again" class="btn" type="button">Play again</button>
+      </section>
+    </main>
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
