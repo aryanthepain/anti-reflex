@@ -8,7 +8,8 @@
     "start": "npx --yes http-server -c-1 -o",
     "serve": "npx --yes http-server -c-1",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "prepare": "git config core.hooksPath .githooks"
   },
   "devDependencies": {
     "vitest": "^2.1.0"

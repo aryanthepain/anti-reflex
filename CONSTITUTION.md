@@ -20,11 +20,11 @@
 ---
 
 ## 3. Dependency Management Policy
-- **Zero Speculative Dependencies**: Adding a new package to `package.json` or `pyproject.toml` requires explicit justification that standard libraries cannot solve the problem.
-- **Lockfile Integrity**: Always update lockfiles (`poetry.lock`, `package-lock.json`, `pnpm-lock.yaml`) whenever dependencies are altered.
+- **Zero Speculative Dependencies**: Adding a new package to `package.json` requires explicit justification that standard browser or runtime APIs cannot solve the problem.
+- **Lockfile Integrity**: Always update `package-lock.json` whenever dependencies are altered.
 
 ---
 
 ## 4. Code Quality & Formatting
-- **Linter / Formatter**: Run deterministic formatters (`ruff`, `black`, `prettier`) before committing.
-- **Backward Compatibility**: Do not break public APIs or database schemas without a documented migration plan.
+- **Deterministic Verification**: Run local deterministic verification (`pwsh -File ./scripts/verify.ps1`) before committing.
+- **Backward Compatibility**: Do not break public APIs or DOM contract without a documented plan.

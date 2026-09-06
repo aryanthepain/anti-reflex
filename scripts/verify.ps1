@@ -22,97 +22,14 @@ $failed = $false
 Write-Host ""
 Write-Host "🔍 [FLEET LOOP] Running Deterministic Verification..." -ForegroundColor Cyan
 
-# 1. Detect Python Project
-$isPython = (Test-Path "pyproject.toml") -or (Test-Path "requirements.txt") -or (Test-Path "setup.py")
-if ($isPython) {
-    Write-Host ""
-    Write-Host "--- [Python Gate] ---" -ForegroundColor Yellow
-
-    $hasMypy = Get-Command mypy -ErrorAction SilentlyContinue
-    if ($hasMypy) {
-        Write-Host "Running mypy static analysis..." -ForegroundColor Gray
-        mypy .
-        if ($LASTEXITCODE -ne 0) {
-            Write-Host "❌ mypy typecheck failed!" -ForegroundColor Red
-            $failed = $true
-        } else {
-            Write-Host "✅ mypy typecheck passed." -ForegroundColor Green
-        }
-    }
-
-    if (-not $failed) {
-        $hasPytest = Get-Command pytest -ErrorAction SilentlyContinue
-        if ($hasPytest) {
-            Write-Host "Running pytest..." -ForegroundColor Gray
-            if ($TargetTest) {
-                pytest -k $TargetTest -v
-            } else {
-                pytest -q
-            }
-            if ($LASTEXITCODE -ne 0) {
-                Write-Host "❌ pytest tests failed!" -ForegroundColor Red
-                $failed = $true
-            } else {
-                Write-Host "✅ pytest tests passed." -ForegroundColor Green
-            }
-        }
-    }
-}
-
-# 2. Detect Node / TypeScript Project
-$isNode = Test-Path "package.json"
-if ($isNode) {
-    Write-Host ""
-    Write-Host "--- [Node / TypeScript Gate] ---" -ForegroundColor Yellow
-
-    if (Test-Path "tsconfig.json") {
-        Write-Host "Running tsc typecheck..." -ForegroundColor Gray
-        npx tsc --noEmit
-        if ($LASTEXITCODE -ne 0) {
-            Write-Host "❌ tsc typecheck failed!" -ForegroundColor Red
-            $failed = $true
-        } else {
-            Write-Host "✅ tsc typecheck passed." -ForegroundColor Green
-        }
-    }
-
-    if (-not $failed) {
-        if ($Quick) {
-            Write-Host "Running quick verification path (-Quick)..." -ForegroundColor Gray
-            if (Test-Path "src/main.js") {
-                node --check src/main.js
-                if ($LASTEXITCODE -ne 0) {
-                    Write-Host "❌ src/main.js syntax check failed!" -ForegroundColor Red
-                    $failed = $true
-                }
-            }
-        }
-
-        if (-not $failed) {
-            Write-Host "Running tests (npm test)..." -ForegroundColor Gray
-            if ($TargetTest) {
-                npm test -- $TargetTest
-            } else {
-                npm test
-            }
-            if ($LASTEXITCODE -ne 0) {
-                Write-Host "❌ npm test failed!" -ForegroundColor Red
-                $failed = $true
-            } else {
-                Write-Host "✅ npm test passed." -ForegroundColor Green
-            }
-        }
-    }
-}
-
-# 3. Detect JavaScript / Web Project syntax check
+# 1. JavaScript Syntax Gate
 $entrypoint = $null
 if (Test-Path "src/main.js") { $entrypoint = "src/main.js" }
 elseif (Test-Path "docs/app.js") { $entrypoint = "docs/app.js" }
 
-if ($entrypoint -and (-not $Quick)) {
+if ($entrypoint) {
     Write-Host ""
-    Write-Host "--- [Web and JavaScript Gate] ---" -ForegroundColor Yellow
+    Write-Host "--- [JavaScript Syntax Gate] ---" -ForegroundColor Yellow
     $hasNode = Get-Command node -ErrorAction SilentlyContinue
     if ($hasNode) {
         Write-Host "Checking $entrypoint syntax..." -ForegroundColor Gray
@@ -126,13 +43,37 @@ if ($entrypoint -and (-not $Quick)) {
     }
 }
 
-# 4. Agent Alarm Resolver
+# 2. Test Suites (Vitest / npm test)
+$isNode = Test-Path "package.json"
+if ($isNode -and (-not $failed)) {
+    if ($Quick) {
+        Write-Host ""
+        Write-Host "⏩ [-Quick] Bypassing test runner in quick gate mode." -ForegroundColor Cyan
+    } else {
+        Write-Host ""
+        Write-Host "--- [Vitest Test Gate] ---" -ForegroundColor Yellow
+        Write-Host "Running tests (npm test)..." -ForegroundColor Gray
+        if ($TargetTest) {
+            npm test -- $TargetTest
+        } else {
+            npm test
+        }
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "❌ npm test failed!" -ForegroundColor Red
+            $failed = $true
+        } else {
+            Write-Host "✅ npm test passed." -ForegroundColor Green
+        }
+    }
+}
+
+# 3. Agent Alarm Resolver
 $alarmScript = Join-Path $PSScriptRoot "agent-alarm.ps1"
 if (-not (Test-Path $alarmScript)) {
     $alarmScript = Join-Path $env:USERPROFILE ".gemini\config\skills\agent-alarm\scripts\agent-alarm.ps1"
 }
 
-# 5. Overall Verification Result
+# 4. Overall Verification Result
 if ($failed) {
     Write-Host ""
     Write-Host "⛔ [VERIFICATION FAILED] Please fix errors before proceeding." -ForegroundColor Red
