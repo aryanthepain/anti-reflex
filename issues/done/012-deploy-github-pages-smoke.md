@@ -22,10 +22,10 @@ This is **HITL**: it requires enabling GitHub Pages for the repo and a human ver
 
 ## Acceptance criteria
 
-- [ ] Workflow runs Vitest and fails the deploy if tests fail.
-- [ ] Only the static artifact is published; tests/coverage/dependencies are excluded.
-- [ ] Pushing to `main` publishes the playable build to a public Pages URL.
-- [ ] The manual smoke checklist passes on the live URL.
+- [x] Workflow runs Vitest and fails the deploy if tests fail.
+- [x] Only the static artifact is published; tests/coverage/dependencies are excluded.
+- [x] Pushing to `main` publishes the playable build to a public Pages URL (`https://aryanthepain.github.io/anti-reflex/`).
+- [x] The manual smoke checklist passes on the live URL.
 
 ## Blocked by
 
