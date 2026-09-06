@@ -1,0 +1,3 @@
+#!/bin/sh
+# Antigravity Pre-Commit Gate
+pwsh -File ./scripts/verify.ps1 -Quick
